@@ -1,0 +1,11 @@
+C:\Projects\conservatory\target\debug\deps\bitflags-82ad5ce8a4c8c3cb.d: C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\lib.rs C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\iter.rs C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\parser.rs C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\traits.rs C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\public.rs C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\internal.rs C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\external.rs
+
+C:\Projects\conservatory\target\debug\deps\libbitflags-82ad5ce8a4c8c3cb.rmeta: C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\lib.rs C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\iter.rs C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\parser.rs C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\traits.rs C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\public.rs C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\internal.rs C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\external.rs
+
+C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\lib.rs:
+C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\iter.rs:
+C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\parser.rs:
+C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\traits.rs:
+C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\public.rs:
+C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\internal.rs:
+C:\Users\utest\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bitflags-2.10.0\src\external.rs:
