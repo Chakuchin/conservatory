@@ -1,0 +1,21 @@
+[package]
+name = "conservatory-infrastructure"
+rust-version.workspace = true
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Underlying infrastructure for the conservatory server"
+categories.workspace = true
+repository.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+conservatory-core =  { workspace = true }
+conservatory-model = { workspace = true }
+
+uuid = { workspace = true }
+sqlx = { workspace = true }
+anyhow = { workspace = true }

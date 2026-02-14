@@ -1,0 +1,194 @@
+[workspace]
+resolver = "3"
+members = [
+    "crates",
+    "crates/core",
+    "crates/model",
+    "crates/infrastructure",
+    "crates/cli"
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.93.0"
+authors = ["Chakuchin"]
+license = "Apache-2.0"
+readme = "README.md"
+description = "An conservatory server for school project"
+categories = ["web-programming::http-server"]
+repository = "https://github.com/Chakuchin/conservatory"
+
+[workspace.dependencies]
+conservatory-cli = { path = "crates/cli", version = "0.1.0" }
+conservatory-core = { path = "crates/core", version = "0.1.0" }
+conservatory-model = { path = "crates/model", version = "0.1.0" }
+conservatory-infrastructure = { path = "crates/infrastructure", version = "0.1.0" }
+
+strum = { version = "0.27.2", default-features = false, features = ["std", "derive"] }
+sqlx = { version = "0.8.6", default-features = false, features = ["postgres", "runtime-tokio", "tls-none", "derive", "uuid", "time", "macros", "migrate"] }
+serde = { version = "1.0.228", default-features = false, features = ["std", "derive"] }
+uuid = { version = "1.20.0", default-features = false, features = ["std", "v4", "v7", "serde"] }
+time = { version = "0.3.47", default-features = false, features = ["std", "serde"] }
+anyhow = { version = "1.0.101", default-features = false, features = ["std"] }
+log = { version = "0.4.29", default-features = false, features = ["std"] }
+simple_logger = { version = "5.1.0", default-features = false, features = ["colors", "timestamps"] }
+clap = { version = "4.5.57", default-features = false, features = ["std", "derive", "color", "suggestions", "help"] }
+tokio = { version = "1.49.0", default-features = false, features = ["rt-multi-thread", "macros"] }
+bollard = { version = "0.20.1", default-features = false, features = ["pipe", "buildkit", "time"] }
+futures-util = { version = "0.3.31", default-features = false, features = ["std"] }
+
+[profile.dev]
+opt-level = 0
+debug = false
+debug-assertions = false
+overflow-checks = true
+strip = "debuginfo"
+lto = false
+panic = "unwind"
+incremental = true
+codegen-units = 256
+
+[profile.test]
+opt-level = 0
+debug = true
+debug-assertions = true
+overflow-checks = true
+strip = false
+lto = false
+incremental = true
+codegen-units = 256
+
+[profile.nextest]
+inherits = "test"
+debug = false
+strip = "debuginfo"
+
+[profile.release]
+opt-level = 3
+debug = false
+debug-assertions = false
+overflow-checks = false
+lto = "fat"
+strip = "symbols"
+panic = "abort"
+incremental = false
+codegen-units = 1
+
+[profile.release-debugging]
+inherits = "release"
+incremental = true
+debug = "full"
+strip = false
+lto = false
+
+[profile.bench]
+inherits = "release"
+debug = "full"
+strip = false
+lto = false
+incremental = true
+
+[workspace.lints.rust]
+ambiguous_negative_literals = "warn"
+missing_debug_implementations = "warn"
+redundant_imports = "warn"
+redundant_lifetimes = "warn"
+trivial_numeric_casts = "warn"
+unsafe_op_in_unsafe_fn = "warn"
+unused_lifetimes = "warn"
+
+[workspace.lints.clippy]
+cargo = { level = "warn", priority = -1 }
+complexity = { level = "warn", priority = -1 }
+correctness = { level = "warn", priority = -1 }
+nursery = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+perf = { level = "warn", priority = -1 }
+style = { level = "warn", priority = -1 }
+
+allow_attributes_without_reason = "warn"
+as_pointer_underscore = "warn"
+assertions_on_result_states = "warn"
+clone_on_ref_ptr = "warn"
+deref_by_slicing = "warn"
+disallowed_script_idents = "warn"
+empty_drop = "warn"
+empty_enum_variants_with_brackets = "warn"
+empty_structs_with_brackets = "warn"
+fn_to_numeric_cast_any = "warn"
+if_then_some_else_none = "warn"
+map_err_ignore = "warn"
+redundant_type_annotations = "warn"
+renamed_function_params = "warn"
+semicolon_outside_block = "warn"
+string_to_string = "warn"
+undocumented_unsafe_blocks = "warn"
+unnecessary_safety_comment = "warn"
+unnecessary_safety_doc = "warn"
+unneeded_field_pattern = "warn"
+unused_result_ok = "warn"
+dbg_macro = "warn"
+redundant_clone = "warn"
+unnecessary_to_owned = "warn"
+inefficient_to_string = "warn"
+needless_borrow = "warn"
+cloned_instead_of_copied = "warn"
+redundant_closure = "warn"
+redundant_closure_for_method_calls = "warn"
+needless_return = "warn"
+needless_bool = "warn"
+needless_collect = "warn"
+collapsible_if = "warn"
+collapsible_else_if = "warn"
+useless_conversion = "warn"
+from_iter_instead_of_collect = "warn"
+map_identity = "warn"
+if_same_then_else = "warn"
+get_first = "warn"
+single_char_pattern = "warn"
+identity_op = "warn"
+manual_flatten = "warn"
+iter_kv_map = "warn"
+bytes_count_to_len = "warn"
+unnecessary_filter_map = "warn"
+unnecessary_lazy_evaluations = "warn"
+option_as_ref_deref = "warn"
+manual_filter = "warn"
+manual_find = "warn"
+manual_while_let_some = "warn"
+range_plus_one = "warn"
+checked_conversions = "warn"
+manual_strip = "warn"
+manual_split_once = "warn"
+manual_is_ascii_check = "warn"
+manual_range_contains = "warn"
+manual_string_new = "warn"
+manual_instant_elapsed = "warn"
+use_self = "warn"
+redundant_field_names = "warn"
+match_like_matches_macro = "warn"
+manual_map = "warn"
+bool_to_int_with_if = "warn"
+explicit_iter_loop = "warn"
+uninlined_format_args = "warn"
+semicolon_if_nothing_returned = "warn"
+unnested_or_patterns = "warn"
+filter_map_next = "warn"
+flat_map_option = "warn"
+map_unwrap_or = "warn"
+implicit_clone = "warn"
+return_self_not_must_use = "warn"
+suspicious_doc_comments = "warn"
+large_stack_arrays = "warn"
+panic_in_result_fn = "warn"
+
+redundant_else = "warn"
+single_match_else = "warn"
+manual_let_else = "warn"
+or_fun_call = "warn"
+option_if_let_else = "warn"
+
+unwrap_used = "warn"
+expect_used = "warn"
+indexing_slicing = "warn"
