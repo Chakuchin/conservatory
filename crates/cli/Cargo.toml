@@ -15,6 +15,7 @@ workspace = true
 [dependencies]
 conservatory-model = { workspace = true }
 conservatory-infrastructure = { workspace = true }
+conservatory-application = { workspace = true }
 
 time = { workspace = true }
 futures-util = { workspace = true }

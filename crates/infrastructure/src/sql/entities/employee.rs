@@ -16,7 +16,7 @@ impl<'r> FromRow<'r, PgRow> for EmployeeEntity {
                 let name = row.try_get::<String, _>("name")?;
                 let surname = row.try_get::<String, _>("surname")?;
                 let patronymic = row.try_get::<Option<String>, _>("patronymic")?;
-                let currency = Currency::from_str(&row.try_get::<String, _>("currency")?).unwrap();
+                let currency = Currency::from_str(row.try_get::<&str, _>("currency")?).unwrap();
                 let amount = row.try_get::<i32, _>("amount")? as u32;
                 let works_since = row.try_get::<Date, _>("works_since")?;
 

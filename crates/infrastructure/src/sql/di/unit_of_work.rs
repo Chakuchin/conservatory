@@ -7,10 +7,10 @@ pub struct PgUnitOfWork<'a> {
         pub tx: PgTransaction<'a>
 }
 
-impl<'a> UnitOfWork<'a> for PgUnitOfWork<'a> {
-        type EmployeeRepo<'b> = EmployeePostgresqlRepository<'b, 'a> where Self: 'b, Self: 'a;
+impl<'a> UnitOfWork for PgUnitOfWork<'a> {
+        type EmployeeRepo<'b> = EmployeePostgresqlRepository<'b, 'a> where Self: 'b;
 
-        fn employee_repo<'b>(&'b mut self) -> Self::EmployeeRepo<'b> {
+        fn employee_repo(&mut self) -> Self::EmployeeRepo<'_> {
                 Self::EmployeeRepo::new(&mut self.tx)
         }
 

@@ -41,6 +41,7 @@ impl PostgresqlProvider {
 
         pub async fn begin(&self) -> Result<PgUnitOfWork<'_>, anyhow::Error> {
                 let tx = self.pool.begin().await?;
+
                 Ok(PgUnitOfWork { tx })
         }
 
