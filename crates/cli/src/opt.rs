@@ -1,4 +1,5 @@
 use clap::Parser;
+use strum::{Display, EnumString, AsRefStr};
 
 #[derive(Debug, Parser)]
 #[clap(version, about, author)]
@@ -35,4 +36,27 @@ pub struct DatabaseConfig {
 #[command(about = "Postgres database operations", long_about = None)]
 pub enum DatabaseCommand {
         Init(DatabaseConfig),
+}
+
+#[derive(
+        Debug,
+        Display,
+        EnumString,
+        AsRefStr,
+        Clone,
+        Hash,
+        Eq,
+        PartialEq
+)]
+#[strum(ascii_case_insensitive)]
+pub enum RuntimeCommand {
+        Create,
+        Get,
+        List,
+        Update,
+        Delete,
+        Exit,
+        Help,
+        #[strum(default)]
+        Unknown(String)
 }

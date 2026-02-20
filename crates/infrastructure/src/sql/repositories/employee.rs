@@ -1,7 +1,8 @@
 use anyhow::Error;
 use sqlx::PgTransaction;
 use conservatory_model::employee::EmployeeModel;
-use conservatory_model::identities::employee_id::EmployeeId;
+use conservatory_model::employee::id::EmployeeId;
+use conservatory_model::employee::salary::Salary;
 use conservatory_model::repositories::employee::EmployeeRepository;
 use crate::sql::entities::employee::EmployeeEntity;
 
@@ -39,10 +40,79 @@ impl EmployeeRepository for EmployeePostgresqlRepository<'_, '_> {
         }
 
         async fn get(&mut self, id: EmployeeId) -> Result<Option<EmployeeModel>, Error> {
-                let employee: Option<EmployeeEntity>  = sqlx::query_as(
+                let employee: Option<EmployeeEntity> = sqlx::query_as(
                         "SELECT id, name, surname, patronymic, amount::INT4, currency::TEXT, works_since \
                         FROM \"employee\" \
-                        WHERE id = $1::uuid"
+                        WHERE id = $1::uuid AND deleted_at IS NULL"
+                        )
+                        .bind(id.to_string())
+                        .fetch_optional(self.transaction.as_mut())
+                        .await?;
+
+                Ok(employee.map(|inner| inner.0))
+        }
+
+        async fn list(&mut self) -> Result<Vec<EmployeeModel>, Error> {
+                let employees: Vec<EmployeeEntity> = sqlx::query_as(
+                        "SELECT id, name, surname, patronymic, amount::INT4, currency::TEXT, works_since \
+                        FROM \"employee\" \
+                        WHERE deleted_at IS NULL"
+                        )
+                        .fetch_all(self.transaction.as_mut())
+                        .await?;
+
+                Ok(employees.into_iter().map(|inner| inner.0).collect())
+        }
+
+        async fn update_salary(&mut self, id: EmployeeId, salary: Salary) -> Result<Option<EmployeeModel>, Error> {
+                let employee: Option<EmployeeEntity> = sqlx::query_as(
+                        "UPDATE \"employee\" \
+                        SET amount = $1::U32, currency = $2::CURRENCY \
+                        WHERE id = $3::uuid AND deleted_at IS NULL \
+                        RETURNING id, name, surname, patronymic, amount::INT4, currency::TEXT, works_since"
+                        )
+                        .bind(salary.amount.to_string())
+                        .bind(salary.currency.to_string())
+                        .bind(id.to_string())
+                        .fetch_optional(self.transaction.as_mut())
+                        .await?;
+
+                Ok(employee.map(|inner| inner.0))
+        }
+
+        async fn soft_delete(&mut self, id: EmployeeId) -> Result<Option<EmployeeModel>, Error> {
+                let employee: Option<EmployeeEntity> = sqlx::query_as(
+                        "UPDATE \"employee\" \
+                                SET deleted_at = CURRENT_TIMESTAMP \
+                                WHERE id = $1::uuid AND deleted_at IS NULL \
+                                RETURNING id, name, surname, patronymic, amount::INT4, currency::TEXT, works_since"
+                )
+                        .bind(id.to_string())
+                        .fetch_optional(self.transaction.as_mut())
+                        .await?;
+
+                Ok(employee.map(|inner| inner.0))
+        }
+
+        async fn delete(&mut self, id: EmployeeId) -> Result<Option<EmployeeModel>, Error> {
+                let employee: Option<EmployeeEntity> = sqlx::query_as(
+                        "DELETE FROM \"employee\" \
+                        WHERE id = $1::uuid \
+                        RETURNING id, name, surname, patronymic, amount::INT4, currency::TEXT, works_since"
+                        )
+                        .bind(id.to_string())
+                        .fetch_optional(self.transaction.as_mut())
+                        .await?;
+
+                Ok(employee.map(|inner| inner.0))
+        }
+
+        async fn restore(&mut self, id: EmployeeId) -> Result<Option<EmployeeModel>, Error> {
+                let employee: Option<EmployeeEntity> = sqlx::query_as(
+                        "UPDATE \"employee\" \
+                        SET deleted_at = NULL \
+                        WHERE id = $1::uuid AND deleted_at IS NOT NULL \
+                        RETURNING id, name, surname, patronymic, amount::INT4, currency::TEXT, works_since"
                         )
                         .bind(id.to_string())
                         .fetch_optional(self.transaction.as_mut())

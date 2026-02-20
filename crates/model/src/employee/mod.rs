@@ -1,7 +1,9 @@
 pub mod salary;
+pub mod id;
+pub mod index;
 
 use salary::Salary;
-use crate::identities::employee_id::EmployeeId;
+use id::EmployeeId;
 use time::Date;
 
 #[derive(Debug, Clone, Hash, Eq, PartialEq)]

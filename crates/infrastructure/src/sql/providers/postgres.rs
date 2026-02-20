@@ -1,8 +1,7 @@
 use std::time::Duration;
-use sqlx::{ConnectOptions, PgPool, PgTransaction};
+use sqlx::{PgPool};
 use sqlx::postgres::{PgConnectOptions, PgPoolOptions, PgSslMode};
 use crate::sql::di::unit_of_work::PgUnitOfWork;
-use crate::sql::repositories::employee::EmployeePostgresqlRepository;
 
 #[derive(Debug)]
 pub struct PostgresqlProvider {
@@ -35,7 +34,7 @@ impl PostgresqlProvider {
 
         pub async fn init(&self) -> Result<(), anyhow::Error> {
                 sqlx::migrate!("../../migrations").run(&self.pool).await?;
-
+                
                 Ok(())
         }
 

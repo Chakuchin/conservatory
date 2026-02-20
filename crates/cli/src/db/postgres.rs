@@ -4,65 +4,50 @@ use bollard::config::{ContainerCreateBody, ContainerStateStatusEnum, HostConfig,
 use bollard::Docker;
 use bollard::query_parameters::{CreateContainerOptions, CreateImageOptions, RestartContainerOptions};
 use futures_util::TryStreamExt;
-use time::{Date, Month};
 use tokio::time::sleep;
-use conservatory_application::services::employee::BaseEmployeeService;
 use conservatory_infrastructure::sql::providers::postgres::PostgresqlProvider;
-use conservatory_model::employee::EmployeeModel;
-use conservatory_model::employee::salary::Salary;
-use conservatory_model::enums::Currency;
-use conservatory_model::repositories::employee::EmployeeRepository;
-use conservatory_model::services::employee::EmployeeService;
 use crate::opt::{DatabaseCommand, DatabaseConfig, DatabaseOpt};
 
-pub async fn run_database_command(opt: DatabaseOpt) -> anyhow::Result<()> {
+pub async fn run_database_command(opt: DatabaseOpt) -> Result<PostgresqlProvider, anyhow::Error> {
         let command = opt.command.clone();
 
         match command {
                 DatabaseCommand::Init(config) => {
-                        start_postgres(&config).await?;
-                        sleep(Duration::from_secs(10)).await; // TODO: Позже рализую нормальное ожидание
-                        let pg = PostgresqlProvider::new(&config.host, config.port, &config.username, &config.database).await?;
+                        let pg = start_postgres(&config).await?;
                         pg.init().await?;
 
-                        let service = BaseEmployeeService::new(pg.begin().await?);
-
-                        let employee = service.create(EmployeeModel::new(
-                                "test".to_string(),
-                                "test2".to_string(),
-                                Some("test3".to_string()),
-                                Salary::new(100, Currency::RUB),
-                                Date::from_calendar_date(2025, Month::April, 4)?,
-                        )).await?;
-
-                        // Сервис создаётся дважды, так как он предназдначен для использования хендлерами в будующем и является скорее use case
-                        let service = BaseEmployeeService::new(pg.begin().await?);
-
-                        log::info!("{:?}", service.get(employee.id).await?);
+                        Ok(pg)
                 }
         }
-        Ok(())
 }
 
-async fn start_postgres(config: &DatabaseConfig) -> anyhow::Result<()> {
+async fn start_postgres(config: &DatabaseConfig) -> Result<PostgresqlProvider, anyhow::Error> {
         let docker = Docker::connect_with_local_defaults()?;
         let container_name = "postgres-conservatory";
         let image_name = "postgres:latest";
 
-        let container_exists = docker.inspect_container(container_name, None).await.is_ok();
+        if let Ok(container) = docker.inspect_container(container_name, None).await {
+                if container.state.is_some_and(|state|
+                        state.status.is_some_and(|s|
+                                s != ContainerStateStatusEnum::RUNNING
+                        )
+                ) {
+                        docker.restart_container(
+                                container_name,
+                                Some(RestartContainerOptions {
+                                        t: Some(10),
+                                        signal: None
+                                })
+                        ).await?;
 
-        if container_exists {
-                docker.restart_container(
-                        container_name,
-                        Some(RestartContainerOptions {
-                                t: Some(10),
-                                signal: None
-                        })
-                ).await?;
+                        // TODO: Позже рализую нормальное ожидание
+                        wait_until_starts(docker, container_name, Duration::from_secs(15)).await;
+                        sleep(Duration::from_secs(10)).await;
+                }
 
-                wait_until_starts(docker, container_name, Duration::from_secs(15)).await;
+                let pg = PostgresqlProvider::new(&config.host, config.port, &config.username, &config.database).await?;
 
-                return Ok(())
+                return Ok(pg)
         }
 
         docker.create_image(
@@ -115,8 +100,11 @@ async fn start_postgres(config: &DatabaseConfig) -> anyhow::Result<()> {
         ).await?;
 
         wait_until_starts(docker, container_name, Duration::from_secs(30)).await;
+        sleep(Duration::from_secs(10)).await;
 
-        Ok(())
+        let pg = PostgresqlProvider::new(&config.host, config.port, &config.username, &config.database).await?;
+
+        Ok(pg)
 }
 
 async fn wait_until_starts(docker: Docker, container_name: &str, mut wait_for: Duration) {

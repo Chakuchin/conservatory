@@ -32,13 +32,14 @@ sqlx = { version = "0.8.6", default-features = false, features = ["postgres", "r
 serde = { version = "1.0.228", default-features = false, features = ["std", "derive"] }
 uuid = { version = "1.21.0", default-features = false, features = ["std", "v4", "v7", "serde"] }
 time = { version = "0.3.47", default-features = false, features = ["std", "serde"] }
-anyhow = { version = "1.0.101", default-features = false, features = ["std"] }
+anyhow = { version = "1.0.102", default-features = false, features = ["std"] }
 log = { version = "0.4.29", default-features = false, features = ["std"] }
-simple_logger = { version = "5.1.0", default-features = false, features = ["colors", "timestamps"] }
-clap = { version = "4.5.58", default-features = false, features = ["std", "derive", "color", "suggestions", "help"] }
-tokio = { version = "1.49.0", default-features = false, features = ["rt-multi-thread", "macros"] }
+simple_logger = { version = "5.2.0", default-features = false, features = ["colors", "timestamps"] }
+clap = { version = "4.5.60", default-features = false, features = ["std", "derive", "color", "suggestions", "help"] }
+tokio = { version = "1.49.0", default-features = false, features = ["rt-multi-thread", "macros", "io-std"] }
 bollard = { version = "0.20.1", default-features = false, features = ["pipe", "buildkit", "time"] }
-futures-util = { version = "0.3.31", default-features = false, features = ["std"] }
+futures-util = { version = "0.3.32", default-features = false, features = ["std"] }
+cruet = { version = "0.15.0", default-features = false, features = [] }
 
 [profile.dev]
 opt-level = 0
