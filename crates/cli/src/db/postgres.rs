@@ -6,6 +6,7 @@ use bollard::query_parameters::{CreateContainerOptions, CreateImageOptions, Rest
 use futures_util::TryStreamExt;
 use tokio::time::sleep;
 use conservatory_infrastructure::sql::providers::postgres::PostgresqlProvider;
+use conservatory_model::providers::sql::SQLProvider;
 use crate::opt::{DatabaseCommand, DatabaseConfig, DatabaseOpt};
 
 pub async fn run_database_command(opt: DatabaseOpt) -> Result<PostgresqlProvider, anyhow::Error> {
@@ -45,7 +46,7 @@ async fn start_postgres(config: &DatabaseConfig) -> Result<PostgresqlProvider, a
                         sleep(Duration::from_secs(10)).await;
                 }
 
-                let pg = PostgresqlProvider::new(&config.host, config.port, &config.username, &config.database).await?;
+                let pg = PostgresqlProvider::new(&config.host, config.port, &config.username, None, &config.database).await?;
 
                 return Ok(pg)
         }
@@ -102,7 +103,7 @@ async fn start_postgres(config: &DatabaseConfig) -> Result<PostgresqlProvider, a
         wait_until_starts(docker, container_name, Duration::from_secs(30)).await;
         sleep(Duration::from_secs(10)).await;
 
-        let pg = PostgresqlProvider::new(&config.host, config.port, &config.username, &config.database).await?;
+        let pg = PostgresqlProvider::new(&config.host, config.port, &config.username, None, &config.database).await?;
 
         Ok(pg)
 }

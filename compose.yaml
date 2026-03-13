@@ -1,0 +1,31 @@
+networks:
+  inner:
+    driver: bridge
+
+services:
+  server:
+    build:
+      context: .
+      target: runtime
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./pkey.pem:/app/pkey.pem:ro
+      - ./pkey.pub.pem:/app/pkey.pub.pem:ro
+    environment:
+      DB_HOST: "db"
+      DB_USER: "postgres"
+      DB_NAME: "postgres"
+    networks:
+      - inner
+    depends_on:
+      - db
+  db:
+    container_name: db
+    image: docker.io/bitnami/postgresql:latest
+    environment:
+      ALLOW_EMPTY_PASSWORD: yes
+    ports:
+      - "5432:5432"
+    networks:
+      - inner

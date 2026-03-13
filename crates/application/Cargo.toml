@@ -16,3 +16,4 @@ workspace = true
 conservatory-model = { workspace = true }
 
 anyhow = { workspace = true }
+async-trait = { workspace = true }

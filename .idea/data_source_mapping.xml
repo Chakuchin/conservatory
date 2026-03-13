@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourcePerFileMappings">
-    <file url="file://$PROJECT_DIR$/migrations/0001_types.down.sql" value="3c7a94b0-0f9c-4509-a5b2-90134c37f9fd" />
+    <file url="file://$PROJECT_DIR$/crates/infrastructure/migrations/0001_types.down.sql" value="3c7a94b0-0f9c-4509-a5b2-90134c37f9fd" />
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/47f9aa2f-9682-48fb-9855-38e0606e05a3/console.sql" value="47f9aa2f-9682-48fb-9855-38e0606e05a3" />
   </component>
 </project>

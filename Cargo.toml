@@ -6,7 +6,8 @@ members = [
     "crates/model",
     "crates/infrastructure",
     "crates/cli",
-    "crates/application"
+    "crates/application",
+    "crates/presentation"
 ]
 
 [workspace.package]
@@ -21,25 +22,32 @@ categories = ["web-programming::http-server"]
 repository = "https://github.com/Chakuchin/conservatory"
 
 [workspace.dependencies]
+conservatory-presentation = { path = "crates/presentation", version = "0.1.0" }
 conservatory-application = { path = "crates/application", version = "0.1.0" }
 conservatory-cli = { path = "crates/cli", version = "0.1.0" }
 conservatory-core = { path = "crates/core", version = "0.1.0" }
 conservatory-model = { path = "crates/model", version = "0.1.0" }
 conservatory-infrastructure = { path = "crates/infrastructure", version = "0.1.0" }
 
-strum = { version = "0.27.2", default-features = false, features = ["std", "derive"] }
+actix-web = { version = "4.13.0", default-features = false, features = ["macros", "http2"] }
+utoipa = { version = "5.4.0", default-features = false, features = ["actix_extras", "time", "uuid"] }
+utoipa-actix-web = { version = "0.1.2", default-features = false, features = [] }
+utoipa-swagger-ui = { version = "9.0.2", default-features = false, features = ["actix-web"] }
+strum = { version = "0.28.0", default-features = false, features = ["std", "derive"] }
 sqlx = { version = "0.8.6", default-features = false, features = ["postgres", "runtime-tokio", "tls-none", "derive", "uuid", "time", "macros", "migrate"] }
 serde = { version = "1.0.228", default-features = false, features = ["std", "derive"] }
-uuid = { version = "1.21.0", default-features = false, features = ["std", "v4", "v7", "serde"] }
-time = { version = "0.3.47", default-features = false, features = ["std", "serde"] }
+uuid = { version = "1.22.0", default-features = false, features = ["std", "v4", "v7", "serde"] }
+time = { version = "0.3.47", default-features = false, features = ["std", "serde", "macros", "formatting", "parsing"] }
 anyhow = { version = "1.0.102", default-features = false, features = ["std"] }
 log = { version = "0.4.29", default-features = false, features = ["std"] }
 simple_logger = { version = "5.2.0", default-features = false, features = ["colors", "timestamps"] }
 clap = { version = "4.5.60", default-features = false, features = ["std", "derive", "color", "suggestions", "help"] }
-tokio = { version = "1.49.0", default-features = false, features = ["rt-multi-thread", "macros", "io-std"] }
+tokio = { version = "1.50.0", default-features = false, features = ["rt-multi-thread", "macros", "io-std"] }
 bollard = { version = "0.20.1", default-features = false, features = ["pipe", "buildkit", "time"] }
 futures-util = { version = "0.3.32", default-features = false, features = ["std"] }
 cruet = { version = "0.15.0", default-features = false, features = [] }
+dotenvy = { version = "0.15.7", default-features = false, features = [] }
+async-trait = { version = "0.1.89", default-features = false, features = [] }
 
 [profile.dev]
 opt-level = 0

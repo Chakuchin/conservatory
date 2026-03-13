@@ -1,9 +1,10 @@
 use anyhow::Error;
+use async_trait::async_trait;
 use sqlx::PgTransaction;
 use conservatory_model::employee::EmployeeModel;
 use conservatory_model::employee::id::EmployeeId;
 use conservatory_model::employee::salary::Salary;
-use conservatory_model::repositories::employee::EmployeeRepository;
+use conservatory_model::repositories::sql::employee::EmployeeRepository;
 use crate::sql::entities::employee::EmployeeEntity;
 
 #[derive(Debug)]
@@ -19,17 +20,18 @@ impl<'a, 'ts> EmployeePostgresqlRepository<'a, 'ts> {
         }
 }
 
+#[async_trait]
 impl EmployeeRepository for EmployeePostgresqlRepository<'_, '_> {
-        async fn create(&mut self, employee: EmployeeModel) -> Result<EmployeeModel, Error> {
+        async fn create(&mut self, employee: &EmployeeModel) -> Result<EmployeeModel, Error> {
                 let EmployeeEntity(new_employee) = sqlx::query_as(
                         "INSERT INTO \"employee\" (id, name, surname, patronymic, amount, currency, works_since) \
                         VALUES ($1::uuid, $2, $3, $4, $5::U32, $6::CURRENCY, $7) \
                         RETURNING id, name, surname, patronymic, amount::INT4, currency::TEXT, works_since"
                         )
                         .bind(employee.id.to_string())
-                        .bind(employee.name)
-                        .bind(employee.surname)
-                        .bind(employee.patronymic)
+                        .bind(employee.name.clone())
+                        .bind(employee.surname.clone())
+                        .bind(employee.patronymic.clone())
                         .bind(employee.salary.amount as i32)
                         .bind(employee.salary.currency.to_string())
                         .bind(employee.works_since)
@@ -39,7 +41,7 @@ impl EmployeeRepository for EmployeePostgresqlRepository<'_, '_> {
                 Ok(new_employee)
         }
 
-        async fn get(&mut self, id: EmployeeId) -> Result<Option<EmployeeModel>, Error> {
+        async fn get(&mut self, id: &EmployeeId) -> Result<Option<EmployeeModel>, Error> {
                 let employee: Option<EmployeeEntity> = sqlx::query_as(
                         "SELECT id, name, surname, patronymic, amount::INT4, currency::TEXT, works_since \
                         FROM \"employee\" \
@@ -64,7 +66,7 @@ impl EmployeeRepository for EmployeePostgresqlRepository<'_, '_> {
                 Ok(employees.into_iter().map(|inner| inner.0).collect())
         }
 
-        async fn update_salary(&mut self, id: EmployeeId, salary: Salary) -> Result<Option<EmployeeModel>, Error> {
+        async fn update_salary(&mut self, id: &EmployeeId, salary: &Salary) -> Result<Option<EmployeeModel>, Error> {
                 let employee: Option<EmployeeEntity> = sqlx::query_as(
                         "UPDATE \"employee\" \
                         SET amount = $1::U32, currency = $2::CURRENCY \
@@ -80,7 +82,7 @@ impl EmployeeRepository for EmployeePostgresqlRepository<'_, '_> {
                 Ok(employee.map(|inner| inner.0))
         }
 
-        async fn soft_delete(&mut self, id: EmployeeId) -> Result<Option<EmployeeModel>, Error> {
+        async fn soft_delete(&mut self, id: &EmployeeId) -> Result<Option<EmployeeModel>, Error> {
                 let employee: Option<EmployeeEntity> = sqlx::query_as(
                         "UPDATE \"employee\" \
                                 SET deleted_at = CURRENT_TIMESTAMP \
@@ -94,7 +96,7 @@ impl EmployeeRepository for EmployeePostgresqlRepository<'_, '_> {
                 Ok(employee.map(|inner| inner.0))
         }
 
-        async fn delete(&mut self, id: EmployeeId) -> Result<Option<EmployeeModel>, Error> {
+        async fn delete(&mut self, id: &EmployeeId) -> Result<Option<EmployeeModel>, Error> {
                 let employee: Option<EmployeeEntity> = sqlx::query_as(
                         "DELETE FROM \"employee\" \
                         WHERE id = $1::uuid \
@@ -107,7 +109,7 @@ impl EmployeeRepository for EmployeePostgresqlRepository<'_, '_> {
                 Ok(employee.map(|inner| inner.0))
         }
 
-        async fn restore(&mut self, id: EmployeeId) -> Result<Option<EmployeeModel>, Error> {
+        async fn restore(&mut self, id: &EmployeeId) -> Result<Option<EmployeeModel>, Error> {
                 let employee: Option<EmployeeEntity> = sqlx::query_as(
                         "UPDATE \"employee\" \
                         SET deleted_at = NULL \

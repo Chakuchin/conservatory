@@ -23,6 +23,8 @@ pub async fn init(opt: ConservatoryCli) -> Result<PostgresqlProvider, anyhow::Er
 }
 
 pub async fn run(db: PostgresqlProvider) -> Result<(), anyhow::Error> {
+        let service = BaseEmployeeService::new(db.clone());
+
         let mut stdin = BufReader::new(tokio::io::stdin()).lines();
         let mut stdout = tokio::io::stdout();
 
@@ -124,9 +126,7 @@ pub async fn run(db: PostgresqlProvider) -> Result<(), anyhow::Error> {
                                                 name, surname, Some(patronymic), salary, works_since
                                         );
 
-                                        let service = BaseEmployeeService::new(db.begin().await?);
-
-                                        let employee = service.create(new_employee).await?;
+                                        let employee = service.create(&new_employee).await?;
 
                                         log::info!("CREATED {employee:?}")
                                 },
@@ -143,9 +143,7 @@ pub async fn run(db: PostgresqlProvider) -> Result<(), anyhow::Error> {
                                                 }
                                         };
 
-                                        let service = BaseEmployeeService::new(db.begin().await?);
-
-                                        let employee = service.get(id.into()).await?;
+                                        let employee = service.get(&id.into()).await?;
 
                                         match employee {
                                                 Some(employee) => log::info!("{employee:?}"),
@@ -153,8 +151,6 @@ pub async fn run(db: PostgresqlProvider) -> Result<(), anyhow::Error> {
                                         }
                                 }
                                 RuntimeCommand::List => {
-                                        let service = BaseEmployeeService::new(db.begin().await?);
-
                                         let employees = service.list().await?;
 
                                         for employee in employees {
@@ -200,9 +196,7 @@ pub async fn run(db: PostgresqlProvider) -> Result<(), anyhow::Error> {
 
                                         let salary = Salary::new(amount, currency);
 
-                                        let service = BaseEmployeeService::new(db.begin().await?);
-
-                                        let employee = service.update_salary(id.into(), salary).await?;
+                                        let employee = service.update_salary(&id.into(), &salary).await?;
 
                                         match employee {
                                                 Some(employee) => log::info!("{employee:?}"),
@@ -222,9 +216,7 @@ pub async fn run(db: PostgresqlProvider) -> Result<(), anyhow::Error> {
                                                 }
                                         };
 
-                                        let service = BaseEmployeeService::new(db.begin().await?);
-
-                                        let employee = service.delete(id.into(), true).await?;
+                                        let employee = service.delete(&id.into(), true).await?;
 
                                         match employee {
                                                 Some(employee) => log::info!("{employee:?}"),
@@ -243,7 +235,6 @@ pub async fn run(db: PostgresqlProvider) -> Result<(), anyhow::Error> {
                                 }
                                 RuntimeCommand::Exit => break,
                                 RuntimeCommand::Unknown(s) => log::info!("Unknown command: {s}"),
-                                _ => todo!()
                         }
                 }
         }
