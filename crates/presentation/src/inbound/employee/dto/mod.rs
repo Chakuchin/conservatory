@@ -7,7 +7,6 @@ use uuid::Uuid;
 use conservatory_model::employee::EmployeeModel;
 use conservatory_model::employee::id::EmployeeId;
 use conservatory_model::employee::salary::Salary;
-use conservatory_model::enums::Currency;
 use conservatory_core::date::core_date;
 use crate::inbound::employee::dto::body::SalaryDTO;
 
