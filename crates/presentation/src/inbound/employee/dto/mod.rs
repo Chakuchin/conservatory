@@ -9,8 +9,10 @@ use conservatory_model::employee::id::EmployeeId;
 use conservatory_model::employee::salary::Salary;
 use conservatory_model::enums::Currency;
 use conservatory_core::date::core_date;
+use crate::inbound::employee::dto::body::SalaryDTO;
 
 pub mod path;
+pub mod body;
 
 #[derive(Debug)]
 pub struct EmployeeDTO(EmployeeModel);
@@ -38,9 +40,7 @@ impl PartialSchema for EmployeeDTO {
                         name: &'a str,
                         surname: &'a str,
                         patronymic: Option<&'a str>,
-                        amount: &'a u32,
-                        #[schema(example = "RUB")]
-                        currency: &'a String,
+                        salary: &'a SalaryDTO,
                         works_since: &'a Date,
                 }
 
@@ -61,8 +61,7 @@ impl Serialize for EmployeeDTO {
                         name: &'a str,
                         surname: &'a str,
                         patronymic: Option<&'a str>,
-                        amount: &'a u32,
-                        currency: &'a Currency,
+                        salary: &'a SalaryDTO,
                         #[serde(with = "core_date")]
                         works_since: &'a Date,
                 }
@@ -72,8 +71,7 @@ impl Serialize for EmployeeDTO {
                         name: &self.0.name,
                         surname: &self.0.surname,
                         patronymic: self.0.patronymic.as_deref(),
-                        amount: &self.0.salary.amount,
-                        currency: &self.0.salary.currency,
+                        salary: &Salary::new(self.0.salary.amount.clone(), self.0.salary.currency.clone()).into(),
                         works_since: &self.0.works_since
                 };
 
@@ -91,8 +89,7 @@ impl<'de> Deserialize<'de> for EmployeeDTO {
                         name: String,
                         surname: String,
                         patronymic: Option<String>,
-                        amount: u32,
-                        currency: Currency,
+                        salary: SalaryDTO,
                         #[serde(with = "core_date")]
                         works_since: Date,
                 }
@@ -102,7 +99,7 @@ impl<'de> Deserialize<'de> for EmployeeDTO {
                         helper.name,
                         helper.surname,
                         helper.patronymic,
-                        Salary::new(helper.amount, helper.currency),
+                        helper.salary.clone(),
                         helper.works_since,
                 )))
         }

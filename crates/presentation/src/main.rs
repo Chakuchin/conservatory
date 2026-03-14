@@ -44,7 +44,7 @@ pub async fn main() -> Result<(), anyhow::Error> {
 
         simple_logger::init_with_level(log::Level::Info)?;
 
-        actix_web::rt::time::sleep(Duration::from_secs(3)).await;
+        actix_web::rt::time::sleep(Duration::from_secs(2)).await;
 
         let addr = SocketAddrV4::new(*IP, *PORT);
 

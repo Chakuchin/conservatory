@@ -9,12 +9,11 @@ RUN apt-get update && apt-get install -y musl-tools pkg-config libssl-dev \
 FROM chef AS planner
 COPY ./Cargo.toml ./Cargo.lock ./
 COPY ./crates ./crates
-COPY crates/infrastructure/migrations ./migrations
-RUN cargo chef prepare
+RUN cargo chef prepare --recipe-path recipe.json
 
 FROM chef AS builder
-COPY --from=planner /app/recipe.json .
-RUN cargo chef cook --release
+COPY --from=planner /app/recipe.json recipe.json
+RUN cargo chef cook --release --target x86_64-unknown-linux-musl --recipe-path recipe.json
 COPY . .
 RUN cargo build --release --target x86_64-unknown-linux-musl -p conservatory-presentation
 

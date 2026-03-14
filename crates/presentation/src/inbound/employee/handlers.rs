@@ -1,11 +1,13 @@
-use actix_web::{delete, get, post, HttpResponse, HttpResponseBuilder};
+use actix_web::{delete, get, patch, post, HttpResponse, HttpResponseBuilder};
 use actix_web::http::StatusCode;
 use actix_web::web::{Data, Json, Path};
 use conservatory_model::services::employee::EmployeeService;
+use crate::inbound::employee::dto::body::SalaryDTO;
 use crate::inbound::employee::dto::EmployeeDTO;
 use crate::inbound::employee::dto::path::EmployeeIdDTO;
+use crate::open_api::EMPLOYEE_TAG;
 
-#[utoipa::path(params(EmployeeIdDTO))]
+#[utoipa::path(tag = EMPLOYEE_TAG, params(EmployeeIdDTO))]
 #[get("/{employee_id}")]
 pub async fn get_employee(service: Data<dyn EmployeeService>, id: Path<EmployeeIdDTO>) -> HttpResponse {
         let res = service.get(&id).await;
@@ -23,7 +25,7 @@ pub async fn get_employee(service: Data<dyn EmployeeService>, id: Path<EmployeeI
         }
 }
 
-#[utoipa::path]
+#[utoipa::path(tag = EMPLOYEE_TAG)]
 #[post("/")]
 pub async fn create_employee(service: Data<dyn EmployeeService>, employee: Json<EmployeeDTO>) -> HttpResponse {
         let res = service.create(&employee).await;
@@ -38,7 +40,7 @@ pub async fn create_employee(service: Data<dyn EmployeeService>, employee: Json<
         }
 }
 
-#[utoipa::path]
+#[utoipa::path(tag = EMPLOYEE_TAG)]
 #[get("/")]
 pub async fn list_employees(service: Data<dyn EmployeeService>) -> HttpResponse {
         let res = service.list().await;
@@ -54,7 +56,7 @@ pub async fn list_employees(service: Data<dyn EmployeeService>) -> HttpResponse 
         }
 }
 
-#[utoipa::path(params(EmployeeIdDTO))]
+#[utoipa::path(tag = EMPLOYEE_TAG, params(EmployeeIdDTO))]
 #[delete("/{employee_id}")]
 pub async fn delete_employee(service: Data<dyn EmployeeService>, id: Path<EmployeeIdDTO>) -> HttpResponse {
         let res = service.delete(&id, true).await;
@@ -63,6 +65,24 @@ pub async fn delete_employee(service: Data<dyn EmployeeService>, id: Path<Employ
                 Ok(employee) => {
                         match employee {
                                 Some(employee) => HttpResponseBuilder::new(StatusCode::NO_CONTENT).json(EmployeeDTO::from(employee)),
+                                None => HttpResponseBuilder::new(StatusCode::NOT_FOUND).finish()
+                        }
+                }
+                Err(err) => {
+                        HttpResponseBuilder::new(StatusCode::INTERNAL_SERVER_ERROR).json(err.to_string())
+                }
+        }
+}
+
+#[utoipa::path(tag = EMPLOYEE_TAG, params(EmployeeIdDTO))]
+#[patch("/{employee_id}")]
+pub async fn update_employee_salary(service: Data<dyn EmployeeService>, id: Path<EmployeeIdDTO>, salary: Json<SalaryDTO>) -> HttpResponse {
+        let res = service.update_salary(&id, &salary).await;
+
+        match res {
+                Ok(employee) => {
+                        match employee {
+                                Some(employee) => HttpResponseBuilder::new(StatusCode::OK).json(EmployeeDTO::from(employee)),
                                 None => HttpResponseBuilder::new(StatusCode::NOT_FOUND).finish()
                         }
                 }
