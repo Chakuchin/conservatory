@@ -70,7 +70,7 @@ impl Serialize for EmployeeDTO {
                         name: &self.0.name,
                         surname: &self.0.surname,
                         patronymic: self.0.patronymic.as_deref(),
-                        salary: &Salary::new(self.0.salary.amount.clone(), self.0.salary.currency.clone()).into(),
+                        salary: &self.0.salary.clone().into(),
                         works_since: &self.0.works_since
                 };
 
