@@ -1,4 +1,4 @@
-FROM lukemathwalker/cargo-chef:latest-rust-1.93.0-trixie AS chef
+FROM lukemathwalker/cargo-chef:latest-rust-1.94.0-trixie AS chef
 WORKDIR /app
 
 ENV MALLOC_ARENA_MAX=2

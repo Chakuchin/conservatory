@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 use conservatory_model::di::unit_of_work::UnitOfWork;
 use conservatory_model::employee::EmployeeModel;
-use conservatory_model::employee::id::EmployeeId;
+use conservatory_core::id::Id;
 use conservatory_model::employee::salary::Salary;
 use conservatory_model::providers::sql::SQLProvider;
 use conservatory_model::repositories::sql::employee::EmployeeRepository;
@@ -22,6 +22,7 @@ impl<DB: SQLProvider> BaseEmployeeService<DB> {
 impl<DB: SQLProvider> EmployeeService for BaseEmployeeService<DB> {
         async fn create(&self, employee: &EmployeeModel) -> Result<EmployeeModel, anyhow::Error> {
                 let mut unit_of_work = self.db_provider.begin().await?;
+
                 let new_employee = {
                         let mut repo = unit_of_work.employee_repo();
                         repo.create(employee).await?
@@ -32,7 +33,7 @@ impl<DB: SQLProvider> EmployeeService for BaseEmployeeService<DB> {
                 Ok(new_employee)
         }
 
-        async fn get(&self, id: &EmployeeId) -> Result<Option<EmployeeModel>, anyhow::Error> {
+        async fn get(&self, id: &Id) -> Result<Option<EmployeeModel>, anyhow::Error> {
                 let mut unit_of_work = self.db_provider.begin().await?;
                 let employee = {
                         let mut repo = unit_of_work.employee_repo();
@@ -56,7 +57,7 @@ impl<DB: SQLProvider> EmployeeService for BaseEmployeeService<DB> {
                 Ok(employees)
         }
 
-        async fn update_salary(&self, id: &EmployeeId, salary: &Salary) -> Result<Option<EmployeeModel>, anyhow::Error> {
+        async fn update_salary(&self, id: &Id, salary: &Salary) -> Result<Option<EmployeeModel>, anyhow::Error> {
                 let mut unit_of_work = self.db_provider.begin().await?;
                 let employee = {
                         let mut repo = unit_of_work.employee_repo();
@@ -68,7 +69,7 @@ impl<DB: SQLProvider> EmployeeService for BaseEmployeeService<DB> {
                 Ok(employee)
         }
 
-        async fn delete(&self, id: &EmployeeId, is_soft: bool) -> Result<Option<EmployeeModel>, anyhow::Error> {
+        async fn delete(&self, id: &Id, is_soft: bool) -> Result<Option<EmployeeModel>, anyhow::Error> {
                 let mut unit_of_work = self.db_provider.begin().await?;
                 let employee = {
                         let mut repo = unit_of_work.employee_repo();
@@ -85,7 +86,7 @@ impl<DB: SQLProvider> EmployeeService for BaseEmployeeService<DB> {
                 Ok(employee)
         }
 
-        async fn restore(&self, id: &EmployeeId) -> Result<Option<EmployeeModel>, anyhow::Error> {
+        async fn restore(&self, id: &Id) -> Result<Option<EmployeeModel>, anyhow::Error> {
                 let mut unit_of_work = self.db_provider.begin().await?;
                 let employee = {
                         let mut repo = unit_of_work.employee_repo();

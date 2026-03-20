@@ -5,12 +5,10 @@ use utoipa::{PartialSchema, ToSchema};
 use utoipa::openapi::{RefOr, Schema};
 use uuid::Uuid;
 use conservatory_model::employee::EmployeeModel;
-use conservatory_model::employee::id::EmployeeId;
-use conservatory_model::employee::salary::Salary;
+use conservatory_core::id::Id;
 use conservatory_core::date::core_date;
 use crate::inbound::employee::dto::body::SalaryDTO;
 
-pub mod path;
 pub mod body;
 
 #[derive(Debug)]
@@ -56,7 +54,7 @@ impl Serialize for EmployeeDTO {
         {
                 #[derive(Serialize)]
                 struct SerializeHint<'a> {
-                        id: &'a EmployeeId,
+                        id: &'a Id,
                         name: &'a str,
                         surname: &'a str,
                         patronymic: Option<&'a str>,

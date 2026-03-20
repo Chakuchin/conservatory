@@ -16,3 +16,4 @@ workspace = true
 anyhow = { workspace = true }
 time = { workspace = true }
 serde = { workspace = true }
+uuid = { workspace = true }

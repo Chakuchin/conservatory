@@ -9,9 +9,11 @@
       <sourceFolder url="file://$MODULE_DIR$/crates/cli/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/application/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/presentation/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/.venv" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Python 3.11 (conservatory)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

@@ -2,7 +2,7 @@ use anyhow::Error;
 use async_trait::async_trait;
 use sqlx::PgTransaction;
 use conservatory_model::employee::EmployeeModel;
-use conservatory_model::employee::id::EmployeeId;
+use conservatory_core::id::Id;
 use conservatory_model::employee::salary::Salary;
 use conservatory_model::repositories::sql::employee::EmployeeRepository;
 use crate::sql::entities::employee::EmployeeEntity;
@@ -41,7 +41,7 @@ impl EmployeeRepository for EmployeePostgresqlRepository<'_, '_> {
                 Ok(new_employee)
         }
 
-        async fn get(&mut self, id: &EmployeeId) -> Result<Option<EmployeeModel>, Error> {
+        async fn get(&mut self, id: &Id) -> Result<Option<EmployeeModel>, Error> {
                 let employee: Option<EmployeeEntity> = sqlx::query_as(
                         "SELECT id, name, surname, patronymic, amount::INT4, currency::TEXT, works_since \
                         FROM \"employee\" \
@@ -66,10 +66,10 @@ impl EmployeeRepository for EmployeePostgresqlRepository<'_, '_> {
                 Ok(employees.into_iter().map(|inner| inner.0).collect())
         }
 
-        async fn update_salary(&mut self, id: &EmployeeId, salary: &Salary) -> Result<Option<EmployeeModel>, Error> {
+        async fn update_salary(&mut self, id: &Id, salary: &Salary) -> Result<Option<EmployeeModel>, Error> {
                 let employee: Option<EmployeeEntity> = sqlx::query_as(
                         "UPDATE \"employee\" \
-                        SET amount = $1::U32, currency = $2::CURRENCY \
+                        SET amount = $1::U32, currency = $2::CURRENCY, updated_at = CURRENT_TIMESTAMP \
                         WHERE id = $3::uuid AND deleted_at IS NULL \
                         RETURNING id, name, surname, patronymic, amount::INT4, currency::TEXT, works_since"
                         )
@@ -82,7 +82,7 @@ impl EmployeeRepository for EmployeePostgresqlRepository<'_, '_> {
                 Ok(employee.map(|inner| inner.0))
         }
 
-        async fn soft_delete(&mut self, id: &EmployeeId) -> Result<Option<EmployeeModel>, Error> {
+        async fn soft_delete(&mut self, id: &Id) -> Result<Option<EmployeeModel>, Error> {
                 let employee: Option<EmployeeEntity> = sqlx::query_as(
                         "UPDATE \"employee\" \
                                 SET deleted_at = CURRENT_TIMESTAMP \
@@ -96,7 +96,7 @@ impl EmployeeRepository for EmployeePostgresqlRepository<'_, '_> {
                 Ok(employee.map(|inner| inner.0))
         }
 
-        async fn delete(&mut self, id: &EmployeeId) -> Result<Option<EmployeeModel>, Error> {
+        async fn delete(&mut self, id: &Id) -> Result<Option<EmployeeModel>, Error> {
                 let employee: Option<EmployeeEntity> = sqlx::query_as(
                         "DELETE FROM \"employee\" \
                         WHERE id = $1::uuid \
@@ -109,7 +109,7 @@ impl EmployeeRepository for EmployeePostgresqlRepository<'_, '_> {
                 Ok(employee.map(|inner| inner.0))
         }
 
-        async fn restore(&mut self, id: &EmployeeId) -> Result<Option<EmployeeModel>, Error> {
+        async fn restore(&mut self, id: &Id) -> Result<Option<EmployeeModel>, Error> {
                 let employee: Option<EmployeeEntity> = sqlx::query_as(
                         "UPDATE \"employee\" \
                         SET deleted_at = NULL \

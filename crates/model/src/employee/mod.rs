@@ -1,14 +1,12 @@
 pub mod salary;
-pub mod id;
-pub mod index;
 
 use salary::Salary;
-use id::EmployeeId;
+use conservatory_core::id::Id;
 use time::Date;
 
 #[derive(Debug, Clone, Hash, Eq, PartialEq)]
 pub struct EmployeeModel {
-        pub id: EmployeeId,
+        pub id: Id,
         pub name: String,
         pub surname: String,
         pub patronymic: Option<String>,
@@ -22,7 +20,7 @@ impl EmployeeModel {
                 salary: Salary, works_since: Date
         ) -> Self {
                 Self {
-                        id: EmployeeId::new(),
+                        id: Id::new(),
                         name,
                         surname,
                         patronymic,
