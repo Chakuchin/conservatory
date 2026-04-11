@@ -13,7 +13,11 @@ use utoipa_actix_web::AppExt;
 use conservatory_application::services::employee::BaseEmployeeService;
 use conservatory_model::services::employee::EmployeeService;
 use utoipa_actix_web::{scope, service_config::ServiceConfig};
-use crate::inbound::employee;
+use conservatory_application::services::greenhouse::BaseGreenhouseService;
+use conservatory_application::services::plant::BasePlantService;
+use conservatory_model::services::greenhouse::GreenhouseService;
+use conservatory_model::services::plant::PlantService;
+use crate::inbound::{employee, greenhouse, plant};
 use crate::open_api::ApiDoc;
 use crate::outbound::db;
 
@@ -35,6 +39,8 @@ fn main_configure(config: &mut ServiceConfig) {
         config.service(
                 scope::scope("/api/v1")
                         .configure(employee::configure)
+                        .configure(greenhouse::configure)
+                        .configure(plant::configure)
         );
 }
 
@@ -49,14 +55,20 @@ pub async fn main() -> Result<(), anyhow::Error> {
         let addr = SocketAddrV4::new(*IP, *PORT);
 
         let db = db::init().await;
-        let service: Arc<dyn EmployeeService> = Arc::new(BaseEmployeeService::new(db.clone()));
-        let data: Data<dyn EmployeeService> = Data::from(service);
+        let employee_service: Arc<dyn EmployeeService> = Arc::new(BaseEmployeeService::new(db.clone()));
+        let greenhouse_service: Arc<dyn GreenhouseService> = Arc::new(BaseGreenhouseService::new(db.clone()));
+        let plant_service: Arc<dyn PlantService> = Arc::new(BasePlantService::new(db.clone()));
+        let employee_data: Data<dyn EmployeeService> = Data::from(employee_service);
+        let greenhouse_data: Data<dyn GreenhouseService> = Data::from(greenhouse_service);
+        let plant_data: Data<dyn PlantService> = Data::from(plant_service);
 
         let server = HttpServer::new(
                         move || {
                                 App::new()
                                         .into_utoipa_app()
-                                        .app_data(data.clone())
+                                        .app_data(employee_data.clone())
+                                        .app_data(greenhouse_data.clone())
+                                        .app_data(plant_data.clone())
                                         .openapi(ApiDoc::openapi())
                                         .map(|app| app.wrap(Logger::default()))
                                         .configure(main_configure)

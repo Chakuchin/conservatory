@@ -1,0 +1,1 @@
+DROP TABLE "greenhouse_condition";

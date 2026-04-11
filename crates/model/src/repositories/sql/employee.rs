@@ -2,6 +2,8 @@ use async_trait::async_trait;
 use crate::employee::EmployeeModel;
 use crate::employee::salary::Salary;
 use conservatory_core::id::Id;
+use crate::employee::employee_plant_work::EmployeePlantWorkModel;
+use crate::enums::WorkType;
 
 #[async_trait]
 pub trait EmployeeRepository: Send + Sync {

@@ -4,7 +4,7 @@ use actix_web::web::{Data, Json, Path, Query};
 use conservatory_model::services::employee::EmployeeService;
 use crate::inbound::common::dto::query::IsSoftDTO;
 use crate::inbound::common::dto::path::IdDTO;
-use crate::inbound::employee::dto::body::SalaryDTO;
+use crate::inbound::employee::dto::body::{EmployeePlantWorkDTO, SalaryDTO, WorkTypeDTO};
 use crate::inbound::employee::dto::EmployeeDTO;
 use crate::open_api::EMPLOYEE_TAG;
 use crate::inbound::common::error::{ConservatoryOptionExt, ConservatoryResultExt};

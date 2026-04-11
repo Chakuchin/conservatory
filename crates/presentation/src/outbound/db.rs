@@ -20,7 +20,7 @@ static DB_PORT: LazyLock<u16> = LazyLock::new(||
 static DB_USER: LazyLock<String> = LazyLock::new(||
         conservatory_core::env::resolve_or(
                 "DB_USER",
-                String::from("test")
+                String::from("postgres")
         )
 );
 
@@ -33,7 +33,7 @@ static DB_PASSWORD: LazyLock<Option<String>> = LazyLock::new(||
 static DB_NAME: LazyLock<String> = LazyLock::new(||
         conservatory_core::env::resolve_or(
                 "DB_NAME",
-                String::from("test")
+                String::from("postgres")
         )
 );
 

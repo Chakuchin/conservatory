@@ -21,3 +21,5 @@ strum = { workspace = true }
 time = { workspace = true }
 anyhow = { workspace = true }
 async-trait = { workspace = true }
+weather-utils = { workspace = true }
+fixed = { workspace = true }

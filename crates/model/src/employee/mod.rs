@@ -1,4 +1,5 @@
 pub mod salary;
+pub mod employee_plant_work;
 
 use salary::Salary;
 use conservatory_core::id::Id;

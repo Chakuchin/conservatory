@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file '.\main_window.ui'
+# Form implementation generated from reading ui file 'main_window.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.2
 #
@@ -12,17 +12,20 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(1026, 674)
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayoutWidget = QtWidgets.QWidget(parent=self.centralwidget)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(0, 0, 801, 551))
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(0, 0, 1021, 631))
         self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
+        self.pushButton_2 = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
+        self.pushButton_2.setObjectName("pushButton_2")
+        self.horizontalLayout.addWidget(self.pushButton_2)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.pushButton = QtWidgets.QPushButton(parent=self.verticalLayoutWidget)
@@ -31,14 +34,33 @@ class Ui_MainWindow(object):
         self.pushButton.setObjectName("pushButton")
         self.horizontalLayout.addWidget(self.pushButton)
         self.verticalLayout.addLayout(self.horizontalLayout)
+        self.label = QtWidgets.QLabel(parent=self.verticalLayoutWidget)
+        self.label.setObjectName("label")
+        self.verticalLayout.addWidget(self.label)
         self.tableWidget = QtWidgets.QTableWidget(parent=self.verticalLayoutWidget)
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(0)
         self.tableWidget.setRowCount(0)
         self.verticalLayout.addWidget(self.tableWidget)
+        self.label_2 = QtWidgets.QLabel(parent=self.verticalLayoutWidget)
+        self.label_2.setObjectName("label_2")
+        self.verticalLayout.addWidget(self.label_2)
+        self.tableWidget_2 = QtWidgets.QTableWidget(parent=self.verticalLayoutWidget)
+        self.tableWidget_2.setObjectName("tableWidget_2")
+        self.tableWidget_2.setColumnCount(0)
+        self.tableWidget_2.setRowCount(0)
+        self.verticalLayout.addWidget(self.tableWidget_2)
+        self.label_3 = QtWidgets.QLabel(parent=self.verticalLayoutWidget)
+        self.label_3.setObjectName("label_3")
+        self.verticalLayout.addWidget(self.label_3)
+        self.tableWidget_3 = QtWidgets.QTableWidget(parent=self.verticalLayoutWidget)
+        self.tableWidget_3.setObjectName("tableWidget_3")
+        self.tableWidget_3.setColumnCount(0)
+        self.tableWidget_3.setRowCount(0)
+        self.verticalLayout.addWidget(self.tableWidget_3)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1026, 22))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(parent=MainWindow)
@@ -51,7 +73,11 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.pushButton_2.setText(_translate("MainWindow", "Add employee"))
         self.pushButton.setText(_translate("MainWindow", "Reload"))
+        self.label.setText(_translate("MainWindow", "Employees"))
+        self.label_2.setText(_translate("MainWindow", "Greenhouses"))
+        self.label_3.setText(_translate("MainWindow", "Plants"))
 
 
 if __name__ == "__main__":

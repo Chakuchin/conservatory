@@ -1,0 +1,1 @@
+DROP TABLE "employee_plant_work";

@@ -1,31 +1,35 @@
+use std::ops::Deref;
 use anyhow::Error;
 use async_trait::async_trait;
-use sqlx::PgTransaction;
+use sqlx::PgConnection;
 use conservatory_model::employee::EmployeeModel;
 use conservatory_core::id::Id;
+use conservatory_model::employee::employee_plant_work::EmployeePlantWorkModel;
 use conservatory_model::employee::salary::Salary;
+use conservatory_model::enums::WorkType;
 use conservatory_model::repositories::sql::employee::EmployeeRepository;
 use crate::sql::entities::employee::EmployeeEntity;
+use crate::sql::entities::employee_plant_work::EmployeePlantWorkEntity;
 
 #[derive(Debug)]
-pub struct EmployeePostgresqlRepository<'a, 'ts> {
-        pub transaction: &'a mut PgTransaction<'ts>
+pub struct EmployeePostgresqlRepository<'a> {
+        pub connection: &'a mut PgConnection
 }
 
-impl<'a, 'ts> EmployeePostgresqlRepository<'a, 'ts> {
-        pub fn new(transaction: &'a mut PgTransaction<'ts>) -> Self {
+impl<'a> EmployeePostgresqlRepository<'a> {
+        pub fn new(connection: &'a mut PgConnection) -> Self {
                 Self {
-                        transaction
+                        connection
                 }
         }
 }
 
 #[async_trait]
-impl EmployeeRepository for EmployeePostgresqlRepository<'_, '_> {
+impl EmployeeRepository for EmployeePostgresqlRepository<'_> {
         async fn create(&mut self, employee: &EmployeeModel) -> Result<EmployeeModel, Error> {
                 let EmployeeEntity(new_employee) = sqlx::query_as(
                         "INSERT INTO \"employee\" (id, name, surname, patronymic, amount, currency, works_since) \
-                        VALUES ($1::uuid, $2, $3, $4, $5::U32, $6::CURRENCY, $7) \
+                        VALUES ($1::uuid, $2, $3, $4, $5::UINT, $6::CURRENCY, $7) \
                         RETURNING id, name, surname, patronymic, amount::INT4, currency::TEXT, works_since"
                         )
                         .bind(employee.id.to_string())
@@ -35,7 +39,7 @@ impl EmployeeRepository for EmployeePostgresqlRepository<'_, '_> {
                         .bind(employee.salary.amount as i32)
                         .bind(employee.salary.currency.to_string())
                         .bind(employee.works_since)
-                        .fetch_one(self.transaction.as_mut())
+                        .fetch_one(self.connection.as_mut())
                         .await?;
 
                 Ok(new_employee)
@@ -48,7 +52,7 @@ impl EmployeeRepository for EmployeePostgresqlRepository<'_, '_> {
                         WHERE id = $1::uuid AND deleted_at IS NULL"
                         )
                         .bind(id.to_string())
-                        .fetch_optional(self.transaction.as_mut())
+                        .fetch_optional(self.connection.as_mut())
                         .await?;
 
                 Ok(employee.map(|inner| inner.0))
@@ -60,7 +64,7 @@ impl EmployeeRepository for EmployeePostgresqlRepository<'_, '_> {
                         FROM \"employee\" \
                         WHERE deleted_at IS NULL"
                         )
-                        .fetch_all(self.transaction.as_mut())
+                        .fetch_all(self.connection.as_mut())
                         .await?;
 
                 Ok(employees.into_iter().map(|inner| inner.0).collect())
@@ -69,14 +73,14 @@ impl EmployeeRepository for EmployeePostgresqlRepository<'_, '_> {
         async fn update_salary(&mut self, id: &Id, salary: &Salary) -> Result<Option<EmployeeModel>, Error> {
                 let employee: Option<EmployeeEntity> = sqlx::query_as(
                         "UPDATE \"employee\" \
-                        SET amount = $1::U32, currency = $2::CURRENCY, updated_at = CURRENT_TIMESTAMP \
+                        SET amount = $1::UINT, currency = $2::CURRENCY, updated_at = CURRENT_TIMESTAMP \
                         WHERE id = $3::uuid AND deleted_at IS NULL \
                         RETURNING id, name, surname, patronymic, amount::INT4, currency::TEXT, works_since"
                         )
                         .bind(salary.amount.to_string())
                         .bind(salary.currency.to_string())
                         .bind(id.to_string())
-                        .fetch_optional(self.transaction.as_mut())
+                        .fetch_optional(self.connection.as_mut())
                         .await?;
 
                 Ok(employee.map(|inner| inner.0))
@@ -90,7 +94,7 @@ impl EmployeeRepository for EmployeePostgresqlRepository<'_, '_> {
                                 RETURNING id, name, surname, patronymic, amount::INT4, currency::TEXT, works_since"
                 )
                         .bind(id.to_string())
-                        .fetch_optional(self.transaction.as_mut())
+                        .fetch_optional(self.connection.as_mut())
                         .await?;
 
                 Ok(employee.map(|inner| inner.0))
@@ -103,7 +107,7 @@ impl EmployeeRepository for EmployeePostgresqlRepository<'_, '_> {
                         RETURNING id, name, surname, patronymic, amount::INT4, currency::TEXT, works_since"
                         )
                         .bind(id.to_string())
-                        .fetch_optional(self.transaction.as_mut())
+                        .fetch_optional(self.connection.as_mut())
                         .await?;
 
                 Ok(employee.map(|inner| inner.0))
@@ -117,7 +121,7 @@ impl EmployeeRepository for EmployeePostgresqlRepository<'_, '_> {
                         RETURNING id, name, surname, patronymic, amount::INT4, currency::TEXT, works_since"
                         )
                         .bind(id.to_string())
-                        .fetch_optional(self.transaction.as_mut())
+                        .fetch_optional(self.connection.as_mut())
                         .await?;
 
                 Ok(employee.map(|inner| inner.0))

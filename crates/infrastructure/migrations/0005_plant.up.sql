@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS "plant" (
+        id UUID PRIMARY KEY NOT NULL,
+        type_urn UUID REFERENCES "plant_type"(urn) ON DELETE CASCADE NOT NULL,
+        greenhouse_id UUID REFERENCES "greenhouse"(id) ON DELETE SET NULL DEFAULT NULL,
+
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        deleted_at TIMESTAMP DEFAULT NULL
+);

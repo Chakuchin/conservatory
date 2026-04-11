@@ -29,3 +29,5 @@ simple_logger = { workspace = true }
 serde = { workspace = true }
 time = { workspace = true }
 uuid = { workspace = true }
+weather-utils = { workspace = true }
+fixed = { workspace = true }

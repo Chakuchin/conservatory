@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1026</width>
+    <height>674</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,13 +19,20 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>801</width>
-      <height>551</height>
+      <width>1021</width>
+      <height>631</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPushButton" name="pushButton_2">
+         <property name="text">
+          <string>Add employee</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">
@@ -55,7 +62,34 @@
       </layout>
      </item>
      <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Employees</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QTableWidget" name="tableWidget"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Greenhouses</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTableWidget" name="tableWidget_2"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Plants</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTableWidget" name="tableWidget_3"/>
      </item>
     </layout>
    </widget>
@@ -65,7 +99,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1026</width>
      <height>22</height>
     </rect>
    </property>

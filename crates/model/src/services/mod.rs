@@ -1,2 +1,3 @@
 pub mod employee;
-mod plant_type;
+pub mod plant;
+pub mod greenhouse;
